@@ -2,16 +2,25 @@
   "success": false,
   "stages": {
     "resource_finder": {
-      "success": false,
-      "completion_marker": null,
+      "success": true,
+      "completion_marker": "/data/hypogenicai/workspaces/llms-expose-science-gemini/.resource_finder_complete",
       "outputs": {
+        "literature_review": "/data/hypogenicai/workspaces/llms-expose-science-gemini/literature_review.md",
+        "resources_catalog": "/data/hypogenicai/workspaces/llms-expose-science-gemini/resources.md",
         "papers_dir": "/data/hypogenicai/workspaces/llms-expose-science-gemini/papers",
         "datasets_dir": "/data/hypogenicai/workspaces/llms-expose-science-gemini/datasets",
         "code_dir": "/data/hypogenicai/workspaces/llms-expose-science-gemini/code"
       },
       "log_file": "/data/hypogenicai/workspaces/llms-expose-science-gemini/logs/resource_finder_gemini.log",
       "transcript_file": "/data/hypogenicai/workspaces/llms-expose-science-gemini/logs/resource_finder_gemini_transcript.jsonl",
-      "elapsed_time": 76.3825695514679
+      "elapsed_time": 313.0044221878052
+    },
+    "experiment_runner": {
+      "success": false,
+      "return_code": 1,
+      "elapsed_time": 189.49711632728577,
+      "log_file": "/data/hypogenicai/workspaces/llms-expose-science-gemini/logs/execution_gemini.log",
+      "transcript_file": "/data/hypogenicai/workspaces/llms-expose-science-gemini/logs/execution_gemini_transcript.jsonl"
     }
   },
   "work_dir": "/data/hypogenicai/workspaces/llms-expose-science-gemini"
