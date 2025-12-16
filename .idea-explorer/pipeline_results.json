@@ -1,5 +1,5 @@
 {
-  "success": false,
+  "success": true,
   "stages": {
     "resource_finder": {
       "success": true,
@@ -13,12 +13,12 @@
       },
       "log_file": "/data/hypogenicai/workspaces/llms-expose-science-gemini/logs/resource_finder_gemini.log",
       "transcript_file": "/data/hypogenicai/workspaces/llms-expose-science-gemini/logs/resource_finder_gemini_transcript.jsonl",
-      "elapsed_time": 313.0044221878052
+      "elapsed_time": 232.04902577400208
     },
     "experiment_runner": {
-      "success": false,
-      "return_code": 1,
-      "elapsed_time": 189.49711632728577,
+      "success": true,
+      "return_code": 0,
+      "elapsed_time": 2681.1998801231384,
       "log_file": "/data/hypogenicai/workspaces/llms-expose-science-gemini/logs/execution_gemini.log",
       "transcript_file": "/data/hypogenicai/workspaces/llms-expose-science-gemini/logs/execution_gemini_transcript.jsonl"
     }

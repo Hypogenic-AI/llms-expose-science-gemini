@@ -1,83 +1,75 @@
 ## Research Question
-Can Large Language Models (LLMs) systematically identify and expose under-researched scientific and societal problems by analyzing discrepancies between topics in scientific literature and those found in real-world text sources?
+Can Large Language Models (LLMs) systematically identify and expose important scientific and societal problems that are under-researched or ignored, by analyzing discrepancies between well-funded, benchmarked topics and real-world needs?
 
 ## Background and Motivation
-The current paradigm of "AI for Science" often accelerates research in existing, well-funded areas rather than identifying new, impactful problems. Many real-world issues, particularly those affecting marginalized groups or lacking profitability, remain under-researched. This project aims to develop and test a methodology that uses LLMs as "gap detectors" to bridge this divide, making science more accountable to societal needs by highlighting where real-world problems are not being met with scientific attention.
+AI for science has excelled at accelerating research in existing, well-defined paradigms. However, there is a risk that it reinforces existing biases in funding and focus, neglecting "messy" real-world problems that are not easily benchmarked. This research aims to develop and test a method that uses LLMs as "gap detectors" to make science more answerable to societal needs by highlighting areas where pain is high, but academic attention is low.
 
 ## Hypothesis Decomposition
-The central hypothesis can be broken down into the following testable components:
-1.  **H1 (Topic Extraction):** An LLM can effectively extract and normalize granular, meaningful topics from unstructured text from both scientific and real-world sources.
-2.  **H2 (Corpus Representation):** The distribution of these extracted topics accurately represents the focus areas of each corpus (scientific vs. real-world).
-3.  **H3 (Gap Identification):** A quantitative comparison of topic distributions between the corpora can reveal specific topics that are significantly more prevalent in real-world sources than in scientific literature.
-4.  **H4 (Qualitative Insight):** The identified "gap" topics are non-obvious and represent meaningful areas of under-researched problems.
+The core hypothesis can be broken down into the following testable components:
+1.  **Corpus Divergence:** There is a measurable divergence in topics discussed in formal scientific literature versus those discussed in "real-world" texts (e.g., incident reports, clinical notes).
+2.  **LLM as Topic Extractor:** An LLM can effectively extract, normalize, and quantify the frequency of topics from both scientific and real-world text corpora.
+3.  **Discrepancy as an Indicator:** A high ratio of a topic's frequency in a real-world corpus compared to a scientific corpus is a strong indicator of a potentially under-researched area.
+4.  **Superiority over Baselines:** An LLM-based approach to topic extraction will identify more nuanced and meaningful gaps than traditional statistical methods like topic modeling.
 
 ## Proposed Methodology
 
 ### Approach
-My approach is to construct two distinct text corpora: one representing mainstream scientific research and another representing real-world problems. I will then use an LLM to perform a comparative topic analysis to identify discrepancies. The workflow is as follows:
+I will conduct a comparative analysis of topic frequencies across two distinct domains: aviation safety and clinical health. For each domain, I will create two corpora: one representing scientific research (academic paper abstracts) and one representing real-world issues (incident reports or clinical notes).
 
-1.  **Corpus Construction:** Assemble two corpora.
-    *   **Corpus A (Science):** A collection of scientific paper abstracts. Since one was not provided, I will construct one from a publicly available dataset of arXiv papers, focusing on relevant fields like AI, and health.
-    *   **Corpus B (Real-World):** A combination of the provided `Asclepius-Synthetic-Clinical-Notes` and `ASRS-ChatGPT` (aviation safety reports) datasets.
-2.  **LLM-based Topic Extraction:** Design a prompt for a powerful LLM (e.g., GPT-4.1) to read a document and output a list of key topics or themes. This approach is favored over traditional methods like LDA for its ability to capture semantic nuance.
-3.  **Topic Normalization via Clustering:** Since the LLM will generate textually different but semantically similar topics (e.g., "GDM screening" vs. "gestational diabetes screening"), I will use a sentence-transformer model to embed all extracted topic strings into vectors. Then, I will use a clustering algorithm (e.g., Agglomerative Clustering) to group these vectors, effectively normalizing the topics into semantic clusters.
-4.  **Quantitative Analysis:** For each topic cluster, calculate its frequency within Corpus A and Corpus B. A "gap score" will be computed to quantify the discrepancy (e.g., `log2((freq_real_world + 1) / (freq_science + 1))`).
-5.  **Qualitative Reporting:** The topics with the highest gap scores will be fed back into an LLM to generate a qualitative summary explaining the potential research gap.
+I will employ a dual-pronged approach for analysis:
+1.  **Baseline Analysis:** Use traditional, non-LLM topic modeling (`contextualized-topic-models`) to establish a baseline of statistically derived topics.
+2.  **LLM-based Analysis:** Use a state-of-the-art LLM (e.g., GPT-4.1, Claude Sonnet 4.5) to perform a more semantically aware topic extraction and normalization.
+
+The primary output will be a "Gap Score" for each topic, highlighting those with high real-world prevalence but low scientific focus.
 
 ### Experimental Steps
-1.  **Environment Setup & Data Acquisition:**
-    *   Set up the `uv` virtual environment and install dependencies (`pandas`, `datasets`, `transformers`, `torch`, `scikit-learn`, `openai`, `anthropic`).
-    *   Load the two provided datasets.
-    *   Download and preprocess the `ccdv/arxiv-summarization` dataset from Hugging Face to create the "Science" corpus. I will filter for relevant categories (e.g., `cs.AI`, `cs.LG`, `q-bio.QM`).
-2.  **Topic Extraction:**
-    *   Develop and refine a robust prompt for topic extraction.
-    *   Write a script to iterate through samples from both corpora, call the LLM API (with caching to manage costs), and store the extracted raw topics.
-3.  **Topic Clustering:**
-    *   Load all raw topics.
-    *   Use a pre-trained `sentence-transformers` model to generate embeddings for each topic.
-    *   Apply a clustering algorithm to the embeddings and assign each topic to a semantic cluster.
-4.  **Analysis and Gap Identification:**
-    *   Calculate frequencies of each cluster in each corpus.
-    *   Compute the gap score for each cluster.
-    *   Rank clusters by gap score to identify the top under-researched topics.
-5.  **Baseline Comparison:**
-    *   Run the provided `contextualized-topic-models` on the same corpora.
-    *   Qualitatively compare the topics and gaps identified by the baseline with the LLM-based approach.
+
+**Phase 1: Environment and Data Setup**
+1.  **Install Dependencies:** Install necessary Python libraries (`pandas`, `requests`, `openai`, `matplotlib`, `scikit-learn`, `contextualized-topic-models`) using `uv add`.
+2.  **Prepare Datasets:** Load the pre-gathered datasets: `ASRS-ChatGPT` for aviation and `Asclepius-Synthetic-Clinical-Notes` for clinical data.
+
+**Phase 2: Experiment 1 - Aviation Safety Domain**
+1.  **Scientific Corpus Creation:** Fetch ~500-1000 recent academic paper abstracts related to "aviation safety" from the arXiv API.
+2.  **Real-World Corpus:** Load the `ASRS-ChatGPT` dataset.
+3.  **Baseline Topic Modeling:** Apply the `contextualized-topic-models` library to both corpora to extract topics and their frequencies.
+4.  **LLM Topic Extraction:** Process both corpora in chunks with an LLM. The prompt will instruct the model to identify and normalize key topics related to aviation safety incidents.
+5.  **Gap Score Calculation:** For both the baseline and LLM approaches, calculate a Gap Score for each topic: `Gap Score = (Relative Frequency in ASRS data) / (Relative Frequency in arXiv data)`.
+6.  **Analysis:** Qualitatively analyze the top 10-15 topics with the highest Gap Scores from the LLM approach. Compare them to the baseline results to assess whether the LLM provides more insightful findings.
+
+**Phase 3: Experiment 2 - Clinical Health Domain**
+1.  **Scientific Corpus Creation:** Fetch ~500-1000 recent abstracts from arXiv related to a broad set of common medical conditions.
+2.  **Real-World Corpus:** Load a sample from the `Asclepius-Synthetic-Clinical-Notes` dataset.
+3.  **Repeat Analysis:** Repeat steps 3-6 from the aviation experiment, adapting the LLM prompt for a clinical context (e.g., extracting conditions, symptoms, patient complaints).
 
 ### Baselines
-*   **Primary Baseline:** Contextualized Topic Models (CTM), using the provided `code/contextualized-topic-models` repository. This will show whether the sophisticated semantic understanding of an LLM provides more insightful gaps than a state-of-the-art traditional topic model.
-*   **Secondary Baseline:** A simple keyword/n-gram frequency comparison to establish a performance floor.
+The primary baseline will be the `contextualized-topic-models` library. This will allow for a direct comparison between a traditional, statistical topic modeling approach and the proposed semantic, LLM-based extraction method. The baseline helps test the hypothesis that LLMs offer a more powerful way to identify nuanced gaps.
 
 ### Evaluation Metrics
-*   **Quantitative:** The primary quantitative output will be the ranked list of "gap scores". I will also measure topic coherence scores for the baseline model.
-*   **Qualitative:** The primary evaluation will be a qualitative analysis of the top 5-10 identified gaps. I will assess whether they are:
-    *   **Meaningful:** Do they represent real, understandable problems?
-    *   **Non-obvious:** Do they uncover something not immediately apparent from a surface-level reading?
-    *   **Actionable:** Could they plausibly form the basis of a new research direction?
-*   **Rediscovery:** I will check if the method rediscovers known gaps mentioned in the project's background description (e.g., gestational diabetes, endometriosis).
+-   **Quantitative:** The primary metric will be the **Gap Score**, a ratio calculated for each topic. A table of top-ranked topics will be the main quantitative output.
+-   **Qualitative:** The success of the experiment will be judged by a qualitative, manual analysis of the top-ranked "gap" topics. The evaluation criteria will be:
+    -   **Plausibility:** Does the identified gap seem like a real-world issue that might be overlooked?
+    -   **Actionability:** Does the finding suggest a clear direction for new research?
+    -   **Novelty:** Is the finding non-obvious and genuinely insightful?
 
 ### Statistical Analysis Plan
-The core of the analysis is not traditional hypothesis testing with p-values but rather a descriptive and exploratory analysis. The main statistical tool will be the ranking of gap scores. Visualizations like bar charts will be used to compare topic frequencies between the corpora.
+This research is primarily exploratory and qualitative. The main analysis will involve ranking topics by their Gap Score. Formal statistical significance testing is not the primary goal, but rather the generation of plausible, high-potential research gaps for human review.
 
 ## Expected Outcomes
-*   **Success:** The system identifies a set of credible, non-obvious research gaps. For example, it might highlight specific patient complaints in clinical notes that do not appear in the academic literature, or frequent failure modes in aviation reports that lack corresponding research in AI safety.
-*   **Refutation:** The system produces only obvious or nonsensical gaps (e.g., "patients" is a topic in clinical notes but not in AI papers), or the identified topics are too generic to be meaningful. This would suggest the methodology is flawed or the LLM is not capable of the required nuance.
+-   **Supporting the Hypothesis:** The experiment would support the hypothesis if the LLM-based analysis produces a ranked list of topics where the top items are plausibly under-researched. For example, finding that "physician burnout" or "patient dissatisfaction with wait times" has a much higher prevalence in clinical notes than in the academic literature would be a successful outcome.
+-   **Refuting the Hypothesis:** The hypothesis would be refuted if the identified gaps are nonsensical, already well-researched, or if the traditional topic modeling baseline produces results of equal or higher quality.
 
 ## Timeline and Milestones
-*   **Phase 1 (Planning):** 0.5 hours (Complete)
-*   **Phase 2 (Environment & Data Setup):** 1 hour
-*   **Phase 3 (Implementation):** 2.5 hours (Includes data loaders, LLM API integration, clustering logic)
-*   **Phase 4 (Experimentation):** 2 hours (Running topic extraction and analysis)
-*   **Phase 5 (Analysis):** 1.5 hours (Interpreting results, comparing to baseline)
-*   **Phase 6 (Documentation):** 1 hour (Writing `REPORT.md` and `README.md`)
-*   **Buffer:** 1.5 hours
-*   **Total Estimated Time:** 9 hours
+-   **Environment & Data Setup:** 1 hour
+-   **Experiment 1 (Aviation):** 2-3 hours
+-   **Experiment 2 (Clinical):** 2-3 hours
+-   **Analysis & Documentation:** 2 hours
+-   **Total Estimated Time:** 7-9 hours
 
 ## Potential Challenges
-*   **API Costs/Latency:** LLM API calls can be expensive and slow. **Mitigation:** Start with a small sample of the data to debug the pipeline and estimate costs. Implement robust caching for API calls.
-*   **Noisy Topics:** The LLM may produce noisy or overly generic topics. **Mitigation:** Iterative prompt engineering. The topic clustering step is also designed to merge noisy variations.
-*   **Corpus Mismatch:** The "science" and "real-world" corpora may be so different that comparison is meaningless. **Mitigation:** Careful selection of the arXiv categories for the science corpus to ensure some thematic overlap.
-*   **No "Science" Dataset Provided:** A corpus of scientific literature was not included in the resources. **Mitigation:** I will construct one by downloading and filtering a public dataset of arXiv abstracts, as detailed in the methodology.
+1.  **API Reliability and Cost:** The use of external LLM and arXiv APIs introduces dependencies. API calls can fail or be slow. I will implement robust error handling (e.g., retries with exponential backoff). The cost of LLM API calls will be monitored.
+2.  **Prompt Engineering:** The quality of the LLM-based topic extraction is highly dependent on the prompt. I may need to iterate on the prompt design to get meaningful, well-normalized topics.
+3.  **Corpus Bias:** The scientific corpora from arXiv will be biased towards computer science and physics. For the medical domain, this is a notable limitation. The "real-world" corpora are also not perfect (one is synthetic, the other is self-reported). These limitations will be acknowledged.
+4.  **Scalability:** Processing large datasets in chunks with an LLM can be time-consuming. I will start with smaller samples to validate the pipeline before scaling up.
 
 ## Success Criteria
-The research will be considered successful if the final `REPORT.md` presents a list of at least 3-5 plausible and non-obvious research gaps, supported by both quantitative discrepancy scores and qualitative explanations, which are demonstrably derived from the experimental methodology.
+The research will be considered successful if it produces a list of at least 5-10 plausible, non-obvious, and potentially actionable research gaps for either the aviation or clinical domain, which are demonstrably more insightful than those produced by the traditional baseline method.

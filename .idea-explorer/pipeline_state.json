@@ -3,8 +3,8 @@
   "stages": {
     "resource_finder": {
       "status": "completed",
-      "started_at": "2025-12-14T23:18:27.948783",
-      "completed_at": "2025-12-14T23:23:40.954061",
+      "started_at": "2025-12-16T01:15:16.476705",
+      "completed_at": "2025-12-16T01:19:08.526929",
       "success": true,
       "outputs": {
         "literature_review": "/data/hypogenicai/workspaces/llms-expose-science-gemini/literature_review.md",
@@ -15,19 +15,20 @@
       }
     },
     "experiment_runner": {
-      "status": "failed",
-      "started_at": "2025-12-14T23:23:40.954314",
-      "completed_at": "2025-12-14T23:26:50.464152",
-      "success": false,
+      "status": "completed",
+      "started_at": "2025-12-16T01:19:08.527272",
+      "completed_at": "2025-12-16T02:03:49.745462",
+      "success": true,
       "outputs": {
-        "success": false,
-        "return_code": 1,
-        "elapsed_time": 189.49711632728577,
+        "success": true,
+        "return_code": 0,
+        "elapsed_time": 2681.1998801231384,
         "log_file": "/data/hypogenicai/workspaces/llms-expose-science-gemini/logs/execution_gemini.log",
         "transcript_file": "/data/hypogenicai/workspaces/llms-expose-science-gemini/logs/execution_gemini_transcript.jsonl"
       }
     }
   },
   "current_stage": null,
-  "completed": false
+  "completed": true,
+  "completed_at": "2025-12-16T02:03:49.745812"
 }
